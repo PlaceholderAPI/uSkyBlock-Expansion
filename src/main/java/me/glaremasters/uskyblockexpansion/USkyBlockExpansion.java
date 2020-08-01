@@ -2,6 +2,7 @@ package me.glaremasters.uskyblockexpansion;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
@@ -16,12 +17,12 @@ public final class USkyBlockExpansion extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister() {
-        return Bukkit.getPluginManager().getPlugin("uSkyBlock") != null;
+        return Bukkit.getPluginManager().getPlugin(getRequiredPlugin()) != null;
     }
 
     @Override
     public boolean register() {
-        api = (uSkyBlockAPI) Bukkit.getPluginManager().getPlugin(getPlugin());
+        api = (uSkyBlockAPI) Bukkit.getPluginManager().getPlugin(getRequiredPlugin());
         if (api != null) {
             return super.register();
         }
@@ -34,7 +35,7 @@ public final class USkyBlockExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String getPlugin() {
+    public String getRequiredPlugin() {
         return "uSkyBlock";
     }
 
@@ -49,14 +50,15 @@ public final class USkyBlockExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String arg) {
+    public String onRequest(OfflinePlayer player, String arg) {
+        Player p = (Player) player;
         if (player == null) return "";
 
         switch(arg) {
             case "island_level":
-                return String.valueOf(level.format(api.getIslandLevel(player)));
+                return String.valueOf(level.format(api.getIslandLevel(p)));
             case "island_rank":
-                return String.valueOf(api.getIslandRank(player).getRank());
+                return String.valueOf(api.getIslandRank(p).getRank());
         }
         return "";
     }
